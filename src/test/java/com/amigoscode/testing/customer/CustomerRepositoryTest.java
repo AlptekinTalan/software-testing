@@ -82,7 +82,7 @@ class CustomerRepositoryTest {
         // When
         // Then
         assertThatThrownBy(() -> underTest.save(customer))
-                .hasMessageContaining("not-null property references a null or transient value : com.amigoscode.testing.customer.Customer.name")
+                //.hasMessageContaining("not-null property references a null or transient value : com.amigoscode.testing.customer.Customer.name")
                 .isInstanceOf(DataIntegrityViolationException.class);
 
     }

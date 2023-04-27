@@ -15,12 +15,18 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.then;
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
 
 class CustomerRegistrationServiceTest {
 
+    //daha JPA ile yapılan testleri burada tekrar etmemek önemli unit olarak repo daha önce test edildiği için bu tip servisler mocklanarak test edilmeli.
+    //hız da diğer bir konu dahaJPA ile test edilirse her test çok uzun sürer.
     @Mock
     private CustomerRepository customerRepository;
+    // bu şekilde de mock yaratılabilir, tercih meselesi.
+    //@Mock
+    //private CustomerRepository customerRepository = mock(CustomerRepository.class);
 
     @Captor
     private ArgumentCaptor<Customer> customerArgumentCaptor;
@@ -29,7 +35,9 @@ class CustomerRegistrationServiceTest {
 
     @BeforeEach
     void setUp() {
+        // her test öncesi mockları init etsin.
         MockitoAnnotations.initMocks(this);
+        //her test öncesi servisi yenileyelim.
         underTest = new CustomerRegistrationService(customerRepository);
     }
 
@@ -49,6 +57,7 @@ class CustomerRegistrationServiceTest {
         // When
         underTest.registerNewCustomer(request);
 
+        //fonksiyon içindeki argümanları yakalayan ce sonrasında bizim customer objesi ile eşleştiren kısım
         // Then
         then(customerRepository).should().save(customerArgumentCaptor.capture());
         Customer customerArgumentCaptorValue = customerArgumentCaptor.getValue();
@@ -97,6 +106,9 @@ class CustomerRegistrationServiceTest {
 
         // Then
         then(customerRepository).should(never()).save(any());
+        //bir diğer kullanım
+        //then(customerRepository).should().selectCustomerByPhoneNumber(phoneNumber);
+        //then(customerRepository).shouldHaveNoMoreInteractions();
     }
 
     @Test
